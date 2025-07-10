@@ -23,12 +23,23 @@ export default (command, mode) => {
 			mpliveMainfestPlugin(env.SHOPRO_MPLIVE_ON)
 		],
 		server: {
-			host: true,
-			// open: true,
-			port: env.SHOPRO_DEV_PORT,
-			hmr: {
-				overlay: true,
-			},
+			// host: true,
+			// // open: true,
+			// port: env.SHOPRO_DEV_PORT,
+			// hmr: {
+			// 	overlay: true,
+			// },
+
+			host: '0.0.0.0',  // 允许外部访问
+			port: 3000,       // 开发服务器端口
+			proxy: {
+				// 匹配所有以 '/api' 开头的请求路径
+				'/app-api': {
+					target: env.SHOPRO_DEV_BASE_URL,  // 后端API地址 http://127.0.0.1:48080 ，从环境变量获取
+					changeOrigin: true,            // 允许跨域
+					rewrite: (path) => path.replace(/^\/app-api/, '')  // 重写路径：去掉路径开头的 '/api'
+				}
+			}
 		},
 	};
 };
